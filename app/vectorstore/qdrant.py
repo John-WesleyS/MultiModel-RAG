@@ -59,12 +59,17 @@ def store_chunks(chunks):
         points=points
     )
     
-def search_similar_chunks(query_vector, top_k=5):
+def search_similar_chunks(
+    query_vector,
+    top_k=5,
+    score_threshold=0.5
+):
 
     results = client.query_points(
         collection_name=COLLECTION_NAME,
         query=query_vector,
         limit=top_k,
+        score_threshold=score_threshold,
         with_payload=True
     )
 
@@ -78,4 +83,4 @@ def search_similar_chunks(query_vector, top_k=5):
             "score": result.score
         })
 
-    return retrieved_chunks         
+    return retrieved_chunks

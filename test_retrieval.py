@@ -8,7 +8,8 @@ query_vector = generate_query_embedding(query)
 
 results = search_similar_chunks(
     query_vector,
-    top_k=5
+    top_k=5,
+    score_threshold=0.5
 )
 
 print("\nQuery:")
@@ -28,3 +29,4 @@ for i, result in enumerate(results, start=1):
 
     print("Text:")
     print(result["text"])
+    print("\n-----------------------------")
