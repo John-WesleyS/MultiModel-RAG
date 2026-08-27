@@ -18,7 +18,7 @@ from app.vectorstore.qdrant import (
 )
 
 from app.retrieval.context_builder import build_context
-
+from app.retrieval.source_builder import build_sources
 from app.llm.prompt import build_rag_prompt
 
 from app.llm.llm import generate_response
@@ -132,18 +132,24 @@ async def ingest_document(
 @app.post("/chat")
 def chat(request: ChatRequest):
 
-    # 1. Convert question to embedding
-    query_vector = generate_query_embedding(request.query)
+    # 1. Query embedding
+    query_vector = generate_query_embedding(
+        request.query
+    )
 
-    # 2. Retrieve relevant chunks
+    # 2. Retrieve chunks
     retrieved_chunks = search_similar_chunks(
         query_vector,
         top_k=5,
         score_threshold=0.0
     )
-
+    print("\n================ RETRIEVED CHUNKS ================")
+    print(retrieved_chunks)
+    print("===================================================")
     # 3. Build context
-    context = build_context(retrieved_chunks)
+    context = build_context(
+        retrieved_chunks
+    )
 
     # 4. Build RAG prompt
     prompt = build_rag_prompt(
@@ -152,9 +158,17 @@ def chat(request: ChatRequest):
     )
 
     # 5. Generate answer
-    answer = generate_response(prompt)
+    answer = generate_response(
+        prompt
+    )
+
+    # 6. Build sources
+    sources = build_sources(
+        retrieved_chunks
+    )
 
     return {
         "query": request.query,
-        "answer": answer
+        "answer": answer,
+        "sources": sources
     }

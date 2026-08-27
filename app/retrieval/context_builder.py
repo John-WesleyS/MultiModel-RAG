@@ -1,34 +1,23 @@
-def build_context(retrieved_chunks):
-
-    if not retrieved_chunks:
-        return ""
+def build_context(chunks):
 
     context_parts = []
 
-    for i, chunk in enumerate(retrieved_chunks, start=1):
+    for i, chunk in enumerate(chunks, start=1):
 
-        metadata = chunk.get("metadata", {})
+        text = chunk["text"]
+        metadata = chunk["metadata"]
 
-        filename = metadata.get(
-            "filename",
-            "Unknown document"
-        )
+        filename = metadata.get("filename", "Unknown")
+        chunk_id = metadata.get("chunk_id", "Unknown")
 
-        chunk_index = metadata.get(
-            "chunk_index",
-            "Unknown"
-        )
-
-        text = chunk.get("text", "")
-
-        context_part = f"""
+        context_parts.append(
+            f"""
 [Source {i}]
 Document: {filename}
-Chunk: {chunk_index}
+Chunk: {chunk_id}
 
 {text}
 """
+        )
 
-        context_parts.append(context_part.strip())
-
-    return "\n\n".join(context_parts)
+    return "\n".join(context_parts)
