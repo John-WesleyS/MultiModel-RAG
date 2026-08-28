@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 import uuid
 
-from app.ingestion.loader import extract_pdf_text
+from app.ingestion.loaders.pdf_loader import extract_pdf_text
 from app.ingestion.cleaner import clean_text
 from app.ingestion.splitter import split_text
 
