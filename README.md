@@ -54,7 +54,7 @@ Traditional-RAG/
 │
 ├── main.py                          # FastAPI application entry point
 ├── requirements.txt                 # Project dependencies
-├── README.txt                        # This file
+├── README.md                         # This file (Markdown version)
 │
 ├── app/                            # Main application package
 │   ├── main.py                     # App initialization and exports
@@ -697,7 +697,7 @@ For issues or questions:
 
 ---
 
-**Last Updated**: August 29, 2026
-**Project Status**: Active Development
-**Python Version**: 3.8+
+**Last Updated**: August 29, 2026  
+**Project Status**: Active Development  
+**Python Version**: 3.8+  
 **API Version**: v1.0
