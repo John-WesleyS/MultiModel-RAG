@@ -1,18 +1,23 @@
 import re
 
 
-def clean_text(text: str) -> str:
+def clean_text(text):
 
-    # Replace multiple spaces/tabs with one space
-    text = re.sub(r"[ \t]+", " ", text)
+    if not text:
+        return ""
 
-    # Remove excessive blank lines
-    text = re.sub(r"\n\s*\n+", "\n\n", text)
+    # Remove excessive spaces
+    text = re.sub(
+        r"[ \t]+",
+        " ",
+        text
+    )
 
-    # Remove spaces at the beginning/end of lines
-    text = "\n".join(
-        line.strip()
-        for line in text.splitlines()
+    # Reduce excessive newlines
+    text = re.sub(
+        r"\n\s*\n+",
+        "\n\n",
+        text
     )
 
     # Remove leading/trailing whitespace

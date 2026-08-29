@@ -1,24 +1,101 @@
-from sentence_transformers import SentenceTransformer
+import os
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY is not set")
+
+client = genai.Client(
+    api_key=GEMINI_API_KEY
+)
+
+EMBEDDING_MODEL = "gemini-embedding-2"
+EMBEDDING_DIM = 768
 
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+def generate_embeddings(texts: list[str]) -> list[list[float]]:
+
+    if not texts:
+        return []
+
+    try:
+
+        response = client.models.embed_content(
+            model=EMBEDDING_MODEL,
+            contents=texts,
+            config=types.EmbedContentConfig(
+                output_dimensionality=EMBEDDING_DIM
+            )
+        )
+
+        return [
+            emb.values
+            for emb in response.embeddings
+        ]
+
+    except Exception as e:
+
+        print(
+            f"Error generating text embeddings: {e}"
+        )
+
+        raise e
 
 
-def generate_embeddings(chunks):
+def generate_query_embedding(query: str) -> list[float]:
 
-    texts = [chunk["text"] for chunk in chunks]
+    try:
 
-    embeddings = model.encode(texts)
+        response = client.models.embed_content(
+            model=EMBEDDING_MODEL,
+            contents=query,
+            config=types.EmbedContentConfig(
+                output_dimensionality=EMBEDDING_DIM
+            )
+        )
 
-    for chunk, embedding in zip(chunks, embeddings):
+        return response.embeddings[0].values
 
-        chunk["embedding"] = embedding.tolist()
+    except Exception as e:
 
-    return chunks
+        print(
+            f"Error generating query embedding: {e}"
+        )
+
+        raise e
 
 
-def generate_query_embedding(query: str):
+def generate_image_embedding(
+    image_bytes: bytes,
+    mime_type: str
+) -> list[float]:
 
-    embedding = model.encode(query)
+    try:
 
-    return embedding.tolist()
+        part = types.Part.from_bytes(
+            data=image_bytes,
+            mime_type=mime_type
+        )
+
+        response = client.models.embed_content(
+            model=EMBEDDING_MODEL,
+            contents=[part],
+            config=types.EmbedContentConfig(
+                output_dimensionality=EMBEDDING_DIM
+            )
+        )
+
+        return response.embeddings[0].values
+
+    except Exception as e:
+
+        print(
+            f"Error generating image embedding: {e}"
+        )
+
+        raise e

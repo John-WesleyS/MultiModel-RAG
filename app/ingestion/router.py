@@ -1,32 +1,28 @@
-from pathlib import Path
+import os
 
 
-SUPPORTED_EXTENSIONS = {
+SUPPORTED_FILE_TYPES = {
     ".pdf": "pdf",
     ".docx": "docx",
-    ".xlsx": "excel",
-    ".xls": "excel",
-    ".csv": "csv",
+    ".xlsx": "xlsx",
     ".pptx": "pptx",
-    ".txt": "text",
-    ".png": "image",
-    ".jpg": "image",
-    ".jpeg": "image",
-    ".webp": "image",
-    ".mp4": "video",
-    ".mov": "video",
-    ".avi": "video",
-    ".mkv": "video",
+    ".txt": "txt",
+    ".csv": "csv"
 }
 
 
-def detect_file_type(filename: str):
+def get_file_type(filename):
 
-    extension = Path(filename).suffix.lower()
+    extension = os.path.splitext(
+        filename
+    )[1].lower()
 
-    if extension not in SUPPORTED_EXTENSIONS:
+    if extension not in SUPPORTED_FILE_TYPES:
+
         raise ValueError(
             f"Unsupported file type: {extension}"
         )
 
-    return SUPPORTED_EXTENSIONS[extension]
+    return SUPPORTED_FILE_TYPES[
+        extension
+    ]

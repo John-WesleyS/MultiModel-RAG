@@ -1,7 +1,7 @@
 import mimetypes
 
 
-def extract_audio_data(file_bytes, filename):
+def extract_video_data(file_bytes, filename):
 
     mime_type, _ = mimetypes.guess_type(filename)
 
@@ -9,16 +9,16 @@ def extract_audio_data(file_bytes, filename):
 
         ext = filename.split(".")[-1].lower()
 
-        if ext in ["mp3", "wav", "m4a", "ogg", "flac"]:
+        if ext in ["mp4", "avi", "mov", "mkv", "webm"]:
 
-            mime_type = f"audio/{ext}" if ext != "mp3" else "audio/mpeg"
+            mime_type = f"video/{ext}" if ext != "mov" else "video/quicktime"
 
         else:
 
-            mime_type = "audio/mpeg"
+            mime_type = "video/mp4"
 
     media = [{
-        "type": "audio",
+        "type": "video",
         "bytes": file_bytes,
         "mime_type": mime_type,
         "filename": filename,
